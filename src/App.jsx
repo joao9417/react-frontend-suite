@@ -1,11 +1,12 @@
 import React from "react";
-import AppRouter from "./routes/AppRouter";
+import LoginPage from "./pages/Auth/LoginPAge";
+import RegisterPage from "./pages/Auth/RegisterPage"
 
 function App() {
   return (
-    <div className="App">
-      <AppRouter />
-    </div>
+    <>
+      <LoginPage />
+    </>
   );
 }
 
