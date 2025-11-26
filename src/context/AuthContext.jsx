@@ -1,35 +1,103 @@
-import React, { createContext, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import toast from 'react-hot-toast';
+import authService from '../services/authService';
+import { useNavigate } from 'react-router-dom';
 
-// Creación del contexto
-export const AuthContext = createContext();
+//Creacion el Contexto
+const AuthContext = createContext(null);
 
-// Hook para usar el contexto fácilmente
-// Nota: Este hook se mantendrá, pero useAuth() no funcionará
-// correctamente si no tienes un <AuthProvider> que lo envuelva.
+//Hook personalizado para usar el contexto fácilmente
 export const useAuth = () => useContext(AuthContext);
 
-// Proveedor del contexto (completamente vacío)
-// Se mantiene la estructura para que puedas rellenarla más tarde.
+//Componente Provider
 export const AuthProvider = ({ children }) => {
-  // Los valores iniciales para un contexto vacío
-  const contextValue = {
-    isAuthenticated: false,
-    user: null,
-    loading: false,
-    login: () => console.log("Login no implementado"),
-    register: () => console.log("Register no implementado"),
-    logout: () => console.log("Logout no implementado"),
-  };
+    const [user, setUser] = useState(null); // Almacena {id, username, email}
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
-  return (
-    <AuthContext.Provider value={contextValue}>
-      {children}
-    </AuthContext.Provider>
-  );
+    //Funcion auxiliar para obtener el usuario de los datos de respuesta
+    const getUserFromResponse = (data) => {
+        //El backend devuelve los datos del usuario bajo la clave 'user'
+        return data.user || null;
+    };
+
+    //Logica de Inicializacion
+    useEffect(() => {
+        // Simular la carga inicial. En un proyecto más grande, verificarías el token aquí.
+        const accessToken = localStorage.getItem('accessToken');
+        const userData = localStorage.getItem('user'); 
+        
+        if (accessToken && userData) {
+            try {
+                setUser(JSON.parse(userData));
+                setIsAuthenticated(true);
+            } catch (error) {
+                console.error("Error al parsear datos de usuario:", error);
+                logout();
+            }
+        }
+        setLoading(false);
+    }, []);
+
+    //Logica de Login
+    const login = async (credentials) => {
+        try {
+            const data = await authService.login(credentials);
+            
+            //Guardar tokens en localStorage (ya se hizo en authService, pero lo verificamos)
+            const accessToken = data.access;
+            const refreshToken = data.refresh;
+            const userData = getUserFromResponse(data);
+
+            if (accessToken && userData) {
+                localStorage.setItem('accessToken', accessToken);
+                localStorage.setItem('refreshToken', refreshToken);
+                localStorage.setItem('user', JSON.stringify(userData));
+                
+                //Actualizar estado global
+                setUser(userData);
+                setIsAuthenticated(true);
+                toast.success(`Bienvenido, ${userData.username}!`);
+                
+                navigate('/home');
+                return true;
+            }
+            return false;
+        } catch (error) {
+            const errorMessage = "Credenciales inválidas.";
+            toast.error(errorMessage);
+            throw error;
+        }
+    };
+
+    //Logica de Logout
+    const logout = () => {
+        // Limpiar localStorage
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
+        
+        //Limpiar estado
+        setUser(null);
+        setIsAuthenticated(false);
+        toast('Sesión cerrada.', { icon: '👋' });
+        
+        navigate('/login');
+    };
+
+
+    const contextValue = {
+        user,
+        isAuthenticated,
+        loading,
+        login,
+        logout,
+    };
+
+    return (
+        <AuthContext.Provider value={contextValue}>
+            {loading ? <div>Cargando sesión...</div> : children} 
+        </AuthContext.Provider>
+    );
 };
-
-// Se eliminó:
-// - importaciones de useState, useEffect.
-// - importaciones de axiosInstance.
-// - Toda la lógica interna de login, register, logout, y useEffect.
-// - El estado (isAuthenticated, UserActivation, loading).
