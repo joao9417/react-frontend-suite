@@ -1,0 +1,95 @@
+.navbar {
+  background-color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 4rem;
+}
+
+.navbar__container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.navbar__notificationBtn {
+  position: relative;
+  padding: 0.5rem;
+  border-radius: 9999px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.navbar__notificationBtn:hover {
+  background-color: #f3f4f6;
+}
+
+.navbar__notificationBtn:focus {
+  outline: none;
+  box-shadow:0 0 0 2px rgba(99, 102, 241, 0.5);
+  outline-offset: 2px;
+}
+
+.navbar__notificationIcon {
+  height: 1.5rem;
+  width: 1.5rem;
+  color: #4b5563;
+}
+
+.navbar__notificationBadge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.5rem;
+  height: 1rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+  line-height: 1;
+  color: #fef2f2;
+  background-color: #dc2626;
+  border-radius: 9999px;
+}
+
+.navbar__userContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbar__userPhoto {
+  height: 2rem;
+  width: 2rem;
+  border-radius: 9999px;
+  object-fit: cover;
+}
+
+.navbar__userName {
+  color: #374151;
+  font-weight: 500;
+}
+
+/* Estados de focus para accesibilidad */
+.navbar__notificationBtn:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Variantes de tema */
+.navbar--dark {
+  background-color: #1f2937;
+}
+
+.navbar--dark .navbar__userName {
+  color: #f9fafb;
+}
+
+.navbar--dark .navbar__notificationBtn:hover {
+  background-color: #374151;
+}
