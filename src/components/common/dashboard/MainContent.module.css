@@ -1,0 +1,38 @@
+.mainContent {
+    flex-grow: 1;
+    padding: 1.5rem;
+    background-color: #f3f4f6;
+    overflow: auto;
+    min-height: 100vh;
+}
+
+/* Variantes de tema */
+.mainContent--dark {
+    background-color: #111827;
+    color: #f9fafb;
+}
+
+.mainContent--noPadding {
+    padding: 0;
+}
+
+.mainContent--smallPadding {
+    padding: 0.75rem;
+}
+
+.mainContent--largePadding {
+    padding: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .mainContent {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .mainContent {
+        padding: 0.5rem;
+    }
+}
