@@ -1,60 +1,63 @@
-import React from 'react';
-import DashboardLayout from '../../components/common/dashboard/DashboardLayout';
+import React, { useEffect, useState } from 'react';
+import presupuestoService from '../../services/presupuestoService';
 import styles from './DashboardPage.module.css';
 
-const DashboardPage = ({ variant = 'default' }) => {
-  const getPageClasses = () => {
-    let classNames = styles.dashboardPage;
-    
-    if (variant === 'dark') {
-      classNames += ` ${styles['dashboardPage--dark']}`;
-    }
-    
-    return classNames;
-  };
+const DashboardPage = () => {
+  const [presupuestos, setPresupuestos] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPresupuestos = async () => {
+      try {
+        const data = await presupuestoService.getPresupuestos();
+        setPresupuestos(data);
+      } catch (error) {
+        console.error("Error al obtener presupuestos:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchPresupuestos();
+  }, []);
 
   return (
-    <DashboardLayout>
-      <div className={getPageClasses()}>
-        <div className={styles.dashboardPage__container}>
-          <h1 className={styles.dashboardPage__title}>Bienvenido al Dashboard</h1>
-          <p className={styles.dashboardPage__description}>
-            Aquí podrás gestionar tus presupuestos y configuraciones.
-          </p>
+    <div className={styles.dashboardPage}>
+      <div className={styles.dashboardPage__container}>
+        <h1 className={styles.dashboardPage__title}>Mis Presupuestos</h1>
+        <p className={styles.dashboardPage__description}>
+          Gestión de proyectos y cotizaciones activas.
+        </p>
 
-          {/* Ejemplo de contenido del dashboard */}
+        {loading ? (
+          <p>Cargando presupuestos...</p>
+        ) : (
           <div className={styles.dashboardPage__grid}>
-            {/* Tarjeta 1: Estadísticas Rápidas */}
-            <div className={styles.dashboardPage__card}>
-              <h2 className={styles.dashboardPage__cardTitle}>Estadísticas Rápidas</h2>
-              <p className={styles.dashboardPage__cardText}>Presupuestos activos: 5</p>
-              <p className={styles.dashboardPage__cardText}>Gastos del mes: $1,200</p>
-            </div>
-
-            {/* Tarjeta 2: Últimos Movimientos */}
-            <div className={styles.dashboardPage__card}>
-              <h2 className={styles.dashboardPage__cardTitle}>Últimos Movimientos</h2>
-              <ul className={styles.dashboardPage__list}>
-                <li className={styles.dashboardPage__listItem}>Compra supermercado: -$150</li>
-                <li className={styles.dashboardPage__listItem}>Salario: +$2,500</li>
-                <li className={styles.dashboardPage__listItem}>Factura luz: -$80</li>
-              </ul>
-            </div>
-
-            {/* Tarjeta 3: Acceso Rápido */}
-            <div className={styles.dashboardPage__card}>
-              <h2 className={styles.dashboardPage__cardTitle}>Acceso Rápido</h2>
-              <button className={styles.dashboardPage__button}>
-                Ver Presupuestos
-              </button>
-              <button className={`${styles.dashboardPage__button} ${styles['dashboardPage__button--secondary']}`}>
-                Añadir Gasto
-              </button>
-            </div>
+            {presupuestos.length > 0 ? (
+              presupuestos.map((p) => (
+                <div key={p.id} className={styles.presupuestoCard}>
+                  <div className={styles.presupuestoCard__header}>
+                    <span className={styles.consecutivo}>#{p.consecutivo}</span>
+                    <h3>{p.nombre_proyecto}</h3>
+                  </div>
+                  <div className={styles.presupuestoCard__body}>
+                    <p><strong>Responsable:</strong> {p.nombre_ingeniero_responsable || 'No asignado'}</p>
+                    <p><strong>Fecha:</strong> {new Date(p.fecha_creacion).toLocaleDateString()}</p>
+                    <div className={styles.tags}>
+                      {p.especialidades_detalle?.map(esp => (
+                        <span key={esp.id} className={styles.tag}>{esp.nombre}</span>
+                      ))}
+                    </div>
+                  </div>
+                  <button className={styles.btnVer}>Ver Detalles</button>
+                </div>
+              ))
+            ) : (
+              <p>No tienes presupuestos creados aún.</p>
+            )}
           </div>
-        </div>
+        )}
       </div>
-    </DashboardLayout>
+    </div>
   );
 };
 
