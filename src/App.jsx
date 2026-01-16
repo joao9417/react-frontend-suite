@@ -1,9 +1,10 @@
-import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import LoginPage from './pages/Auth/LoginPage'; 
 import RegisterPage from './pages/Auth/RegisterPage';
-import DashboardPage from './pages/Home/DashboardPage'; 
+import DashboardPage from './pages/Home/DashboardPage';
+import PresupuestoPage from './pages/Presupuestos/PresupuestoPage';
 import ProtectedRoute from './routes/ProtectedRoute'; 
+import DashboardLayout from './components/common/dashboard/DashboardLayout';
 
 function App() {
   return (
@@ -14,7 +15,10 @@ function App() {
       
       {/* Rutas Protegidas */}
       <Route element={<ProtectedRoute />}>
-        <Route path="/home" element={<DashboardPage />} />
+        <Route element={<DashboardLayout />}>
+          <Route path="/home" element={<DashboardPage />} />
+          <Route path="/presupuestos/nuevo" element={<PresupuestoPage />} />
+        </Route>
       </Route>
 
       {/* Redirección inicial */}

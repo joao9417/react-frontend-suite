@@ -39,11 +39,6 @@ const Navbar = () => {
 
         {/* Información del usuario */}
         <div className={styles.navbar__userContainer}>
-          <img 
-            className={styles.navbar__userPhoto} 
-            src={userPhoto} 
-            alt={`Foto de perfil de ${userName}`} 
-          />
           <span className={styles.navbar__userName}>{userName}</span>
         </div>
       </div>

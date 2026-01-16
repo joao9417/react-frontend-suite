@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styles from './Sidebar.module.css';
 
@@ -29,6 +28,14 @@ const Sidebar = () => {
                             className={`${styles.sidebar_link} ${isActiveLink('/dashboard/user-settings')}`}
                         >
                             Configuración usuario 
+                        </Link>
+                    </li>
+                    <li className={styles.sidebar_item}> 
+                        <Link 
+                            to="/presupuestos/nuevo" 
+                            className={`${styles.sidebar_link} ${isActiveLink('/presupuestos/nuevo')}`}
+                        >
+                            Crear Presupuesto
                         </Link>
                     </li>
                 </ul>

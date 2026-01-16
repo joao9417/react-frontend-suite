@@ -1,25 +1,15 @@
-import React from 'react';
+// src/components/dashboard/DashboardLayout.jsx
+import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
-import MainContent from './MainContent';
+// Quitamos MainContent si solo era un contenedor vacío
 import styles from './DashboardLayout.module.css';
 
-const DashboardLayout = ({ 
-  children, 
-  variant = 'default',
-  sidebarCollapsed = false 
-}) => {
+const DashboardLayout = ({ variant = 'default', sidebarCollapsed = false }) => {
   const getLayoutClasses = () => {
     let classNames = styles.dashboardLayout;
-    
-    if (variant === 'dark') {
-      classNames += ` ${styles['dashboardLayout--dark']}`;
-    }
-    
-    if (sidebarCollapsed) {
-      classNames += ` ${styles['dashboardLayout--collapsed']}`;
-    }
-    
+    if (variant === 'dark') classNames += ` ${styles['dashboardLayout--dark']}`;
+    if (sidebarCollapsed) classNames += ` ${styles['dashboardLayout--collapsed']}`;
     return classNames;
   };
 
@@ -28,7 +18,12 @@ const DashboardLayout = ({
       <Sidebar />
       <div className={styles.dashboardLayout__content}>
         <Navbar />
-        <MainContent>{children}</MainContent>
+        {/* IMPORTANTE: Solo dejamos el Outlet. 
+           No metas aquí el DashboardPage ni el MainContent manualmente.
+        */}
+        <main className="flex-1 overflow-y-auto bg-gray-50">
+           <Outlet /> 
+        </main>
       </div>
     </div>
   );
