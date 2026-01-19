@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
+
     //Funcion auxiliar para obtener el usuario de los datos de respuesta
     const getUserFromResponse = (data) => {
         //El backend devuelve los datos del usuario bajo la clave 'user'
@@ -36,6 +37,9 @@ export const AuthProvider = ({ children }) => {
                 console.error("Error al parsear datos de usuario:", error);
                 logout();
             }
+        } else {
+            setIsAuthenticated(false);
+            setUser(null);  
         }
         setLoading(false);
     }, []);
@@ -72,18 +76,20 @@ export const AuthProvider = ({ children }) => {
     };
 
     //Logica de Logout
-    const logout = () => {
-        // Limpiar localStorage
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        localStorage.removeItem('user');
-        
-        //Limpiar estado
-        setUser(null);
-        setIsAuthenticated(false);
-        toast('Sesión cerrada.', { icon: '👋' });
-        
-        navigate('/login');
+    const logout = async () => {
+        try {
+            // 1. Esperamos a que el servicio limpie el backend y el storage
+            await authService.logout(); 
+        } catch (error) {
+            console.error("Error en logout:", error);
+        } finally {
+            // 2. IMPORTANTE: Limpiamos el estado de React SIEMPRE
+            setUser(null);
+            setIsAuthenticated(false);
+            
+            // 3. Forzamos la redirección
+            navigate('/login', { replace: true });
+        }
     };
 
 

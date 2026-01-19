@@ -31,7 +31,7 @@ api.interceptors.response.use(
         const originalRequest = error.config;
 
         if (error.response?.status === 401 && !originalRequest._retry) {
-            originalRequest._retry = true;
+            originalRequest._retry = true; 
 
             try {
                 const refresh = localStorage.getItem('refreshToken');
@@ -79,10 +79,33 @@ export const login = async (credentials) => {
     }
 };
 
+//funcion para cerrar sesion y limpiar tokens
+//endpoint: /api/v1/logout/
+export const logout = async () => {
+    try {
+        const refreshToken = localStorage.getItem('refreshToken');
+        
+        // Llamada al backend para invalidar el token en la Blacklist
+        if (refreshToken) {
+            await api.post('logout/', { refresh: refreshToken });
+        }
+    } catch (error) {
+        // Logueamos el error pero continuamos con la limpieza del local
+        console.error("Error comunicando logout al servidor:", error);
+    } finally {
+        // Limpieza física del almacenamiento SIEMPRE
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
+        localStorage.clear(); // Opcional: Limpieza total por seguridad
+    }
+};
+
 const authService = {
     api,
     register,
     login,
+    logout,
 };
 
 export default authService;

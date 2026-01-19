@@ -2,6 +2,7 @@ import { api } from './authService';
 
 const API_ENDPOINT = 'presupuestos/';
 
+// Listar todos los presupuestos
 export const getPresupuestos = async () => {
     const response = await api.get(API_ENDPOINT);
     return response.data;
@@ -26,6 +27,7 @@ export const getPresupuestoById = async (id) => {
 };
 
 //actualizar presupuesto
+//se usa patch para actualizar parcialmente y no enviar todos los campos
 export const updatePresupuesto = async (id, data) => {
     const response = await api.patch(`${API_ENDPOINT}${id}/`, data);
     return response.data;
@@ -37,8 +39,8 @@ export const deletePresupuesto = async (id) => {
     return response.data;
 };
 
-
-export default {
+// Empaquetamos todos los servicios en un objeto para exportarlos juntos
+const presupuestoService = {
     getPresupuestos,
     crearPresupuesto,
     getEspecialidades,
@@ -46,3 +48,6 @@ export default {
     updatePresupuesto,
     deletePresupuesto,
 };
+
+// Exportamos el objeto con todos los servicios
+export default presupuestoService;

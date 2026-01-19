@@ -1,4 +1,3 @@
-// components/PresupuestoForm.jsx
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form'; 
 import { usePresupuestos } from '../../hooks/usePresupuestos';
@@ -29,23 +28,25 @@ const PresupuestoForm = ({ onSuccess, ingenieros = [] }) => {
         };
         
         fetchEspecialidades();
-    }, [cargarEspecialidades]);
+    }, []);
 
     const onSubmit = async (data) => {
-        // Convertir IDs a números si es necesario
         const formattedData = {
-            ...data,
+            nombre_proyecto: data.nombre,
             ingeniero_responsable: parseInt(data.ingeniero_responsable),
-            especialidad: data.especialidad ? parseInt(data.especialidad) : null,
+            especialidades: data.especialidades ? data.especialidades.map(id => parseInt(id)) : [],
+            validez_oferta: "2024-12-31",
+            tipo_proyecto: "cotizacion",
+            formas_pago: "30% anticipo, 40% avance, 30% final",
+            cliente: data.cliente,
+            ubicacion_geografica: data.ubicacion_geografica,
+            version_presupuesto: "1.0",
         };
 
         const result = await handleCrear(formattedData);
         
         if (result.success) {
-            // Resetear formulario
             reset();
-            
-            // Notificar al componente padre si existe callback
             if (onSuccess) {
                 onSuccess(result.data);
             }
@@ -107,6 +108,20 @@ const PresupuestoForm = ({ onSuccess, ingenieros = [] }) => {
             </div>
 
             <div>
+                <label className="block text-sm font-medium mb-1">Ubicación Geográfica *</label>
+                <input
+                    {...register('ubicacion_geografica', { required: 'La ubicación es obligatoria' })}
+                    className={`mt-1 block w-full rounded-md border px-3 py-2 ${
+                        errors.ubicacion_geografica ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                    placeholder="Ej: Medellín, Colombia"
+                />
+                {errors.ubicacion_geografica && (
+                    <p className="text-red-500 text-sm mt-1">{errors.ubicacion_geografica.message}</p>
+                )}
+            </div>
+
+            <div>
                 <label className="block text-sm font-medium mb-1">
                     Ingeniero Responsable *
                 </label>
@@ -134,30 +149,58 @@ const PresupuestoForm = ({ onSuccess, ingenieros = [] }) => {
             </div>
 
             <div>
-                <label className="block text-sm font-medium mb-1">
-                    Especialidad
+                <label className="block text-sm font-medium mb-2">
+                    Especialidades Relacionadas *
                 </label>
-                <select
-                    {...register('especialidad')}
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
-                    disabled={loadingEspecialidades}
-                >
-                    <option value="">{loadingEspecialidades ? 'Cargando...' : 'Seleccionar especialidad...'}</option>
-                    {especialidades.map(especialidad => (
-                        <option key={especialidad.id} value={especialidad.id}>
-                            {especialidad.nombre}
-                        </option>
-                    ))}
-                </select>
+                
+                {loadingEspecialidades ? (
+                    <p className="text-sm text-gray-500 animate-pulse">Cargando especialidades...</p>
+                ) : (
+                    <div className="mt-1 block w-full rounded-md border border-gray-300 p-3 bg-gray-50 max-h-48 overflow-y-auto">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 custom-scrollbar">
+                            {especialidades.map(especialidad => (
+                                <label 
+                                    key={especialidad.id} 
+                                    className="flex items-center space-x-3 p-2 bg-white rounded border border-gray-200 hover:bg-blue-50 cursor-pointer transition-colors"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        value={especialidad.id}
+                                        {...register('especialidades', { 
+                                            required: 'Selecciona al menos una especialidad' 
+                                        })}
+                                        className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                    />
+                                    <span className="text-sm text-gray-700">
+                                        {especialidad.nombre}
+                                    </span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                )}
+                
+                {errors.especialidades && (
+                    <p className="text-red-500 text-sm mt-1">{errors.especialidades.message}</p>
+                )}
             </div>
 
             <div className="pt-4">
                 <button 
                     type="submit" 
                     disabled={isSubmitting}
-                    className="w-full bg-blue-600 text-white px-4 py-3 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+                    className={`w-full px-4 py-3 rounded-md transition-all font-medium flex items-center justify-center gap-2 ${
+                        isSubmitting 
+                        ? 'bg-gray-400 cursor-not-allowed' 
+                        : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-blue-200'
+                    }`}
                 >
-                    {isSubmitting ? 'Creando presupuesto...' : 'Crear Presupuesto'}
+                    {isSubmitting ? (
+                        <>
+                            <span className="animate-spin border-2 border-white border-t-transparent rounded-full h-5 w-5"></span>
+                            Procesando...
+                        </>
+                    ) : '🚀 Crear Presupuesto'}
                 </button>
             </div>
         </form>

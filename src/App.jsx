@@ -22,7 +22,7 @@ function App() {
       </Route>
 
       {/* Redirección inicial */}
-      <Route path="/" element={<Navigate to="/home" />} />
+      <Route path="/" element={<Navigate to="/home" replace />} />
     </Routes>
   );
 }

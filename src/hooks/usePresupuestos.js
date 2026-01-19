@@ -1,4 +1,3 @@
-// hooks/usePresupuestos.js
 import { useState } from 'react';
 import presupuestoService from '../services/presupuestoService';
 import { toast } from 'react-hot-toast';
@@ -11,20 +10,17 @@ export const usePresupuestos = () => {
     // Función para crear presupuesto
     const handleCrear = async (data) => {
         try {
+
             setLoading(true);
             const response = await presupuestoService.crearPresupuesto(data);
-            
             toast.success(response.message || 'Presupuesto creado exitosamente');
-            
-            // Retornamos los datos para que el componente los use
-            return {
-                success: true,
-                data: response
-            };
+            return { success: true, data: response };
+
         } catch (error) {
+            // Escribir en consola el error completo para depuración
+            console.log("Respuesta completa del error de Django:", error.response?.data);
             console.error('Error creando presupuesto:', error);
             
-            // Manejo de errores más detallado
             const errorMessage = error.response?.data?.error || 
                                 error.response?.data?.message || 
                                 'Error al crear presupuesto';
@@ -57,7 +53,9 @@ export const usePresupuestos = () => {
     // Función para cargar especialidades
     const cargarEspecialidades = async () => {
         try {
+            console.log('Cargando especialidades...');
             const data = await presupuestoService.getEspecialidades();
+            console.log('Especialidades cargadas:', data);
             setEspecialidades(data);
             return data;
         } catch (error) {
