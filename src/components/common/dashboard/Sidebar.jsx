@@ -1,13 +1,27 @@
+import { useAuth } from '../../../context/AuthContext';
+import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styles from './Sidebar.module.css';
 
 const Sidebar = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(false);
+
+    const { logout } = useAuth();
+
     const navigate = useNavigate();
     const location = useLocation();
 
-    const handleLogout = () => {
-        console.log('Cerrando sesión...');
-        navigate('/login');
+    const toggleMenu = () => setIsOpen(!isOpen);
+    const toggleCollapse = () => setIsCollapsed(!isCollapsed);
+
+    const handleLogout = async () => {
+        try {    
+            console.log('Cerrando sesión...');
+            await logout();
+        } catch (error) {
+            console.error('Error during logout:', error);
+        }
     };
 
     const isActiveLink = (path) => {
@@ -15,41 +29,66 @@ const Sidebar = () => {
     };
 
     return (
-        <aside className={styles.sidebar}> 
-            <div className={styles.sidebar_header}> 
-                <h2 className={styles.sidebar_title}>Mi App</h2> 
-            </div>
+        <>
+            <button 
+                className={styles.hamburger} 
+                onClick={() => setIsOpen(!isOpen)}
+            >
+                {isOpen ? '✕' : '☰'}
+            </button>
 
-            <nav className={styles.sidebar_nav}> 
-                <ul className={styles.sidebar_list}> 
-                    <li className={styles.sidebar_item}> 
-                        <Link 
-                            to="/dashboard/user-settings" 
-                            className={`${styles.sidebar_link} ${isActiveLink('/dashboard/user-settings')}`}
-                        >
-                            Configuración usuario 
-                        </Link>
-                    </li>
-                    <li className={styles.sidebar_item}> 
-                        <Link 
-                            to="/presupuestos/nuevo" 
-                            className={`${styles.sidebar_link} ${isActiveLink('/presupuestos/nuevo')}`}
-                        >
-                            Crear Presupuesto
-                        </Link>
-                    </li>
-                </ul>
-            </nav>
-            
-            <div className={styles.sidebar_footer}>
-                <button
-                    onClick={handleLogout}
-                    className={styles.sidebar_logout}
-                >
-                    Logout
+            {isOpen && (
+                <div 
+                    className={styles.overlay} 
+                    onClick={() => setIsOpen(false)} 
+                />
+            )}
+
+
+            <aside className={`
+                ${styles.sidebar} 
+                ${isOpen ? styles.sidebar_open : ''}
+                ${isCollapsed ? styles.sidebar_collapse : ''} 
+            `}>
+                {/* Corregido: collapse_btn coincide con el CSS */}
+                <button className={styles.collapse_btn} onClick={toggleCollapse}>
+                    {isCollapsed ? '→' : '←'}
                 </button>
-            </div>
-        </aside>
+
+                <div className={styles.sidebar_header}> 
+                    <h2 className={styles.sidebar_title}>
+                        {isCollapsed ? 'SP' : 'Suite Presupuestos'}
+                    </h2> 
+                </div>
+
+                <nav className={styles.sidebar_nav}> 
+                    <ul className={styles.sidebar_list}> 
+                        <li className={styles.sidebar_item}> 
+                            <Link to="/" className={`${styles.sidebar_link} ${isActiveLink('/')}`}>
+                                🏠 <span>Inicio</span> {/* Agregamos span */}
+                            </Link>
+                        </li>
+                        <li className={styles.sidebar_item}> 
+                            <Link to="/presupuestos/nuevo" className={`${styles.sidebar_link} ${isActiveLink('/presupuestos/nuevo')}`}>
+                                📄 <span>Crear Presupuesto</span> {/* Agregamos span */}
+                            </Link>
+                        </li>
+                        <li className={styles.sidebar_item}> 
+                            <Link to="/dashboard/user-settings" className={`${styles.sidebar_link} ${isActiveLink('/dashboard/user-settings')}`}>
+                                ⚙️ <span>Configuración</span> {/* Agregamos span */}
+                            </Link>
+                        </li>
+                    </ul>
+                </nav>
+                
+                <div className={styles.sidebar_footer}>
+                    <button onClick={handleLogout} className={styles.sidebar_logout}>
+                        {isCollapsed ? 'Bye' : 'Logout'}
+                    </button>
+                </div>
+            </aside>
+        </>
+
     );
 };
 

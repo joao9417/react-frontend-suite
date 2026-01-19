@@ -4,8 +4,11 @@
   color: white;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 100vh;
   padding: 1rem;
+  position: relative;
+  top: 0;
+  transition: width 0.3s ease; 
 }
 
 .sidebar__header {
@@ -67,4 +70,128 @@
 
 .sidebar__logout:hover {
   background-color: #b91c1c;
+}
+
+.sidebar_link {
+  display: block;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease-in-out;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.sidebar_link:hover {
+  background-color: #374151;
+  transform: translateX(5px);
+  color: #60a5fa;
+}
+
+.sidebar_link_active {
+  background-color: #3b82f6;
+  font-weight: bold;
+}
+
+.sidebar_logout {
+  width: 100%;
+  background-color: #dc2626;
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.sidebar_footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #374151;
+}
+
+.sidebar_collapse {
+  width: 5.5rem;
+}
+
+.sidebar_collapse .sidebar_title,
+.sidebar_collapse .sidebar_link span {
+  display: none;
+}
+
+.collapse_btn {
+  display: flex;
+  position: absolute;
+  right: -12px;
+  top: 60px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .collapse_btn {
+    display: none;
+  }
+}
+
+.hamburger {
+  display: none;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 2000;
+  background: #1f2937;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: block; 
+  }
+
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1500;
+    transform: translateX(-100%); 
+  }
+
+  .sidebar_open {
+    transform: translateX(0); 
+  }
+
+  .sidebar_header {
+    margin-top: 3rem; /* Esto baja el título "Suite Presupuestos" para que la X no lo tape */
+    margin-bottom: 1.5rem;
+    padding-left: 0.5rem;
+  }
+  
+  .sidebar_nav {
+    margin-top: 1rem; /* También bajamos un poco la lista de links */
+  }
 }
