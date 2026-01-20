@@ -40,6 +40,7 @@ export const usePresupuestos = () => {
         try {
             setLoading(true);
             const data = await presupuestoService.getPresupuestos();
+            console.log('Presupuestos cargados:', data);
             setPresupuestos(data);
             return data;
         } catch (error) {
