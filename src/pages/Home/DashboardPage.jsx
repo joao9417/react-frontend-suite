@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import presupuestoService from '../../services/presupuestoService';
 import styles from './DashboardPage.module.css';
 
 const DashboardPage = () => {
   const [presupuestos, setPresupuestos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPresupuestos = async () => {
@@ -20,6 +22,10 @@ const DashboardPage = () => {
     fetchPresupuestos();
   }, []);
 
+  const handleVerDetalle = (id) => {
+    navigate(`/presupuestos/${id}`);
+  };
+
   return (
     <div className={styles.dashboardPage}>
       <div className={styles.dashboardPage__container}>
@@ -34,11 +40,18 @@ const DashboardPage = () => {
           <div className={styles.dashboardPage__grid}>
             {presupuestos.length > 0 ? (
               presupuestos.map((p) => (
-                <div key={p.id} className={styles.presupuestoCard}>
+                <div 
+                  key={p.id} 
+                  className={styles.presupuestoCard}
+                  onClick={() => handleVerDetalle(p.id)}
+                  style={{ cursor: 'pointer' }}
+                >
+
                   <div className={styles.presupuestoCard__header}>
                     <span className={styles.consecutivo}>#{p.consecutivo}</span>
                     <h3>{p.nombre_proyecto}</h3>
                   </div>
+
                   <div className={styles.presupuestoCard__body}>
                     <p><strong>Responsable:</strong> {p.nombre_ingeniero_responsable || 'No asignado'}</p>
                     <p><strong>Fecha:</strong> {new Date(p.fecha_creacion).toLocaleDateString()}</p>
@@ -48,8 +61,18 @@ const DashboardPage = () => {
                       ))}
                     </div>
                   </div>
-                  <button className={styles.btnVer}>Ver Detalles</button>
+
+                  <button 
+                    className={styles.btnVer}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleVerDetalle(p.id); 
+                    }}
+                    >
+                      Ver Detalles
+                  </button>
                 </div>
+                
               ))
             ) : (
               <p>No tienes presupuestos creados aún.</p>

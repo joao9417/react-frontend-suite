@@ -13,20 +13,15 @@ const PresupuestosPage = () => {
     
     const [ingenieros, setIngenieros] = useState([]);
 
-    // Cargar presupuestos al montar la página
+    
     useEffect(() => {
         cargarPresupuestos();
     }, []);
 
-    // Función para cargar ingenieros (necesitarás crear este endpoint en Django)
+    
     useEffect(() => {
         const fetchIngenieros = async () => {
             try {
-                // Esto es un ejemplo - necesitas crear este endpoint
-                // const response = await api.get('usuarios/ingenieros/');
-                // setIngenieros(response.data);
-                
-                // Temporal: lista hardcodeada o cargar desde localStorage
                 const user = JSON.parse(localStorage.getItem('user'));
                 setIngenieros([{ id: user?.id, username: user?.username, email: user?.email }]);
             } catch (error) {
@@ -39,7 +34,7 @@ const PresupuestosPage = () => {
 
     const handlePresupuestoCreado = (nuevoPresupuesto) => {
         toast.success(`Presupuesto ${nuevoPresupuesto.consecutivo} creado!`);
-        cargarPresupuestos(); // Recargar lista
+        cargarPresupuestos();
     };
 
     return (

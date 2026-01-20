@@ -3,6 +3,7 @@ import LoginPage from './pages/Auth/LoginPage';
 import RegisterPage from './pages/Auth/RegisterPage';
 import DashboardPage from './pages/Home/DashboardPage';
 import PresupuestoPage from './pages/Presupuestos/PresupuestoPage';
+import PresupuestoDetallePage from './pages/Presupuestos/PresupuestoDetallePAge';
 import ProtectedRoute from './routes/ProtectedRoute'; 
 import DashboardLayout from './components/common/dashboard/DashboardLayout';
 
@@ -18,6 +19,8 @@ function App() {
         <Route element={<DashboardLayout />}>
           <Route path="/home" element={<DashboardPage />} />
           <Route path="/presupuestos/nuevo" element={<PresupuestoPage />} />
+
+          <Route path="/presupuestos/:id" element={<PresupuestoDetallePage />} />
         </Route>
       </Route>
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import RegisterForm from '../../components/common/register/RegisterForm';
 
 const RegisterPage = () => {
@@ -28,6 +29,15 @@ const RegisterPage = () => {
         onSubmit={handleRegister}
         loading={loading}
       />
+      <div className='mt-6 text-center'>
+        <p className='text-sm text-gray-600 dark:text-gray-400'>
+          ¿Ya tienes una cuenta?{' '}
+          <Link
+            to="/login"
+            className='font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 transition-colors'
+            >Iniciar sesión</Link>
+        </p>
+      </div>
     </div>
   );
 };
