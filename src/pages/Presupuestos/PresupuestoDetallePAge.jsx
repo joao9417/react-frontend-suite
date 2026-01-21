@@ -96,8 +96,11 @@ const PresupuestoDetallePage = () => {
                                     <p>📏 <strong>Dim:</strong> {room.ancho}m x {room.largo}m x {room.alto}m</p>
                                     <p className="text-gray-900 font-semibold">📦 <strong>Volumen:</strong> {room.volumen}m³</p>
                                 </div>
-                                <button className="mt-4 w-full py-2 text-sm text-blue-600 font-medium border border-blue-100 rounded hover:bg-blue-50">
-                                    Ver Detalles
+                                <button
+                                    onClick={() => navigate(`/presupuesto/${id}/cuarto/${room.id}`)} 
+                                    className="mt-4 w-full py-2 text-sm text-blue-600 font-medium border border-blue-100 rounded hover:bg-blue-50"
+                                >
+                                    Configurar Cuarto / Área →
                                 </button>
                             </div>
                         ))}

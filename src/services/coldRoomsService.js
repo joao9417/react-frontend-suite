@@ -24,7 +24,20 @@ export const deleteColdRoom = async (id) => {
     return response.data;
 };
 
+export const getColdRoomById = async (id) => {
+    try {
+        const response = await api.get(`${API_ENDPOINT}${id}/`);
+        return response.data;
+    } catch (error) {
+        console.error("Error en getColdRoomById", error);
+        throw error;
+    }
+};
+    
+
+
 const coldRoomsService = {
+    getColdRoomById,
     getColdRoomsByPresupuesto,
     createColdRoom,
     getColdRoomResumen,
