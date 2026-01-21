@@ -1,6 +1,6 @@
 import { useAuth } from '../../../context/AuthContext';
 import { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation, useParams } from 'react-router-dom';
 import styles from './Sidebar.module.css';
 
 const Sidebar = () => {
@@ -8,11 +8,12 @@ const Sidebar = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
 
     const { logout } = useAuth();
-
     const navigate = useNavigate();
     const location = useLocation();
+    const { presupuestoId } = useParams();
 
-    const toggleMenu = () => setIsOpen(!isOpen);
+    const esModoIngenieria = location.pathname.includes('/cuarto/');
+
     const toggleCollapse = () => setIsCollapsed(!isCollapsed);
 
     const handleLogout = async () => {
@@ -27,6 +28,7 @@ const Sidebar = () => {
     const isActiveLink = (path) => {
         return location.pathname === path ? styles.sidebar_link_active : '';
     };
+
 
     return (
         <>
@@ -43,7 +45,6 @@ const Sidebar = () => {
                     onClick={() => setIsOpen(false)} 
                 />
             )}
-
 
             <aside className={`
                 ${styles.sidebar} 
@@ -62,20 +63,93 @@ const Sidebar = () => {
                 </div>
 
                 <nav className={styles.sidebar_nav}> 
-                    <ul className={styles.sidebar_list}> 
-                        <li className={styles.sidebar_item}> 
-                            <Link to="/" className={`${styles.sidebar_link} ${isActiveLink('/')}`}>
-                                🏠 <span>Inicio</span> {/* Agregamos span */}
-                            </Link>
-                        </li>
-                        <li className={styles.sidebar_item}> 
-                            <Link to="/presupuestos/nuevo" className={`${styles.sidebar_link} ${isActiveLink('/presupuestos/nuevo')}`}>
-                                📄 <span>Crear Presupuesto</span> {/* Agregamos span */}
-                            </Link>
-                        </li>
+                    <ul className={styles.sidebar_list}>
+
+                        {!esModoIngenieria ? (
+                            // menu normal
+                            <>
+                                <li className={styles.sidebar_item}> 
+                                    <Link to="/" className={`${styles.sidebar_link} ${isActiveLink('/')}`}>
+                                        <span>Inicio</span> {/* Agregamos span */}
+                                    </Link>
+                                </li>
+
+                                <li className={styles.sidebar_item}> 
+                                    <Link to="/presupuestos/nuevo" className={`${styles.sidebar_link} ${isActiveLink('/presupuestos/nuevo')}`}>
+                                        <span>Crear Presupuesto</span> {/* Agregamos span */}
+                                    </Link>
+                                </li>
+
+                            </>
+                        ) : (
+                            // menu de modo ingenieria (dentro de un cuarto frio)
+                            <>
+                                <li className={styles.sidebar_item}>
+                                    <Link to={`/presupuestos/${presupuestoId}`} className={styles.sidebar_link}>
+                                        <span>Volver al Presupuesto</span> {/* Agregamos span */}
+                                    </Link>
+                                </li>
+
+                                <li className={styles.sidebar_item}>
+                                    <Link to="#" className={styles.sidebar_link}>
+                                        <span>Evaporadores</span>
+                                    </Link>
+                                </li>
+
+                                <li className={styles.sidebar_item}>
+                                    <Link to="#" className={styles.sidebar_link}>
+                                        <span>Compresores</span>
+                                    </Link>                                    
+                                </li>
+
+                                <li className={styles.sidebar_item}>
+                                    <Link to="#" className={styles.sidebar_link}>
+                                        <span>Condensador</span>
+                                    </Link>                                    
+                                </li>
+
+                                <li className={styles.sidebar_item}>
+                                    <Link to="#" className={styles.sidebar_link}>
+                                        <span>Deshumificador</span>
+                                    </Link>                                    
+                                </li>
+
+                                <li className={styles.sidebar_item}>
+                                    <Link to="#" className={styles.sidebar_link}>
+                                        <span>Enfriador Glicol</span>
+                                    </Link>                                    
+                                </li>
+
+                                <li className={styles.sidebar_item}>
+                                    <Link to="#" className={styles.sidebar_link}>
+                                        <span>Ventilador</span>
+                                    </Link>                                    
+                                </li>
+
+                                <li className={styles.sidebar_item}>
+                                    <Link to="#" className={styles.sidebar_link}>
+                                        <span>Bomba Glicol</span>
+                                    </Link>                                    
+                                </li>
+
+                                <li className={styles.sidebar_item}>
+                                    <Link to="#" className={styles.sidebar_link}>
+                                        <span>Motor</span>
+                                    </Link>                                    
+                                </li>
+
+                                <li className={styles.sidebar_item}>
+                                    <Link to="#" className={styles.sidebar_link}>
+                                        <span>Resistencia</span>
+                                    </Link>                                    
+                                </li>
+                            </>
+                        )}
+                        
+                        
                         <li className={styles.sidebar_item}> 
                             <Link to="/dashboard/user-settings" className={`${styles.sidebar_link} ${isActiveLink('/dashboard/user-settings')}`}>
-                                ⚙️ <span>Configuración</span> {/* Agregamos span */}
+                                <span>Configuración</span>
                             </Link>
                         </li>
                     </ul>

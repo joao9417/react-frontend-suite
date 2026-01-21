@@ -3,8 +3,10 @@ import LoginPage from './pages/Auth/LoginPage';
 import RegisterPage from './pages/Auth/RegisterPage';
 import DashboardPage from './pages/Home/DashboardPage';
 import PresupuestoPage from './pages/Presupuestos/PresupuestoPage';
+import PresupuestoDetallePage from './pages/Presupuestos/PresupuestoDetallePAge';
 import ProtectedRoute from './routes/ProtectedRoute'; 
 import DashboardLayout from './components/common/dashboard/DashboardLayout';
+import ColdRoomDetallePage from './pages/Presupuestos/ColdRoomDetallePage';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
         <Route element={<DashboardLayout />}>
           <Route path="/home" element={<DashboardPage />} />
           <Route path="/presupuestos/nuevo" element={<PresupuestoPage />} />
+          <Route path="/presupuestos/:id" element={<PresupuestoDetallePage />} />
+          <Route path="/presupuesto/:presupuestoId/cuarto/:cuartoId" element={<ColdRoomDetallePage />} />
         </Route>
       </Route>
 
