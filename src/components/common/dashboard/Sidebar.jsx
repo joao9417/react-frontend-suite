@@ -70,13 +70,13 @@ const Sidebar = () => {
                             <>
                                 <li className={styles.sidebar_item}> 
                                     <Link to="/" className={`${styles.sidebar_link} ${isActiveLink('/')}`}>
-                                        <span>Inicio</span> {/* Agregamos span */}
+                                        🏠 <span>Inicio</span> {/* Agregamos span */}
                                     </Link>
                                 </li>
 
                                 <li className={styles.sidebar_item}> 
                                     <Link to="/presupuestos/nuevo" className={`${styles.sidebar_link} ${isActiveLink('/presupuestos/nuevo')}`}>
-                                        <span>Crear Presupuesto</span> {/* Agregamos span */}
+                                        📄 <span>Crear Presupuesto</span> {/* Agregamos span */}
                                     </Link>
                                 </li>
 
@@ -86,61 +86,19 @@ const Sidebar = () => {
                             <>
                                 <li className={styles.sidebar_item}>
                                     <Link to={`/presupuestos/${presupuestoId}`} className={styles.sidebar_link}>
-                                        <span>Volver al Presupuesto</span> {/* Agregamos span */}
+                                        🔙 <span>Volver al Presupuesto</span> {/* Agregamos span */}
                                     </Link>
                                 </li>
 
                                 <li className={styles.sidebar_item}>
                                     <Link to="#" className={styles.sidebar_link}>
-                                        <span>Evaporadores</span>
+                                        ⚡ <span>Mod Electrico</span>
                                     </Link>
                                 </li>
 
                                 <li className={styles.sidebar_item}>
                                     <Link to="#" className={styles.sidebar_link}>
-                                        <span>Compresores</span>
-                                    </Link>                                    
-                                </li>
-
-                                <li className={styles.sidebar_item}>
-                                    <Link to="#" className={styles.sidebar_link}>
-                                        <span>Condensador</span>
-                                    </Link>                                    
-                                </li>
-
-                                <li className={styles.sidebar_item}>
-                                    <Link to="#" className={styles.sidebar_link}>
-                                        <span>Deshumificador</span>
-                                    </Link>                                    
-                                </li>
-
-                                <li className={styles.sidebar_item}>
-                                    <Link to="#" className={styles.sidebar_link}>
-                                        <span>Enfriador Glicol</span>
-                                    </Link>                                    
-                                </li>
-
-                                <li className={styles.sidebar_item}>
-                                    <Link to="#" className={styles.sidebar_link}>
-                                        <span>Ventilador</span>
-                                    </Link>                                    
-                                </li>
-
-                                <li className={styles.sidebar_item}>
-                                    <Link to="#" className={styles.sidebar_link}>
-                                        <span>Bomba Glicol</span>
-                                    </Link>                                    
-                                </li>
-
-                                <li className={styles.sidebar_item}>
-                                    <Link to="#" className={styles.sidebar_link}>
-                                        <span>Motor</span>
-                                    </Link>                                    
-                                </li>
-
-                                <li className={styles.sidebar_item}>
-                                    <Link to="#" className={styles.sidebar_link}>
-                                        <span>Resistencia</span>
+                                        🛠️ <span>Mod Mecanico</span>
                                     </Link>                                    
                                 </li>
                             </>
@@ -149,7 +107,7 @@ const Sidebar = () => {
                         
                         <li className={styles.sidebar_item}> 
                             <Link to="/dashboard/user-settings" className={`${styles.sidebar_link} ${isActiveLink('/dashboard/user-settings')}`}>
-                                <span>Configuración</span>
+                                ⚙️ <span>Configuración</span>
                             </Link>
                         </li>
                     </ul>
