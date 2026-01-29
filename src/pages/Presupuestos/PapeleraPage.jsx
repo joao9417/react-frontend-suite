@@ -31,8 +31,8 @@ const PapeleraPage = () => {
 
       setIsRestoring(true);
       try {
-        // Asumimos que el servicio update funciona para cambiar el estado activo=True
-        await presupuestoService.updatePresupuesto(presupuestoARestaurar.id, { activo: true });
+        // Usamos el servicio dedicado para restaurar
+        await presupuestoService.restorePresupuesto(presupuestoARestaurar.id);
         toast.success('Presupuesto restaurado correctamente');
         setPresupuestos(prev => prev.filter(p => p.id !== presupuestoARestaurar.id));
         setPresupuestoARestaurar(null);

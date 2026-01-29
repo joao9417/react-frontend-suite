@@ -46,6 +46,12 @@ export const getPresupuestosEliminados = async () => {
     return response.data;
 };
 
+// Restaurar presupuesto (activo=True)
+export const restorePresupuesto = async (id) => {
+    const response = await api.patch(`${API_ENDPOINT}${id}/`, { activo: true });
+    return response.data;
+};
+
 // Empaquetamos todos los servicios en un objeto para exportarlos juntos
 const presupuestoService = {
     getPresupuestos,
@@ -53,9 +59,9 @@ const presupuestoService = {
     getEspecialidades,
     getPresupuestoById,
     updatePresupuesto,
-    updatePresupuesto,
     deletePresupuesto,
     getPresupuestosEliminados,
+    restorePresupuesto,
 };
 
 // Exportamos el objeto con todos los servicios
