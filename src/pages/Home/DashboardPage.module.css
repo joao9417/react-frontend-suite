@@ -154,9 +154,15 @@
   margin-top: 10px;
 }
 
-.btnVer {
+.presupuestoCard__actions {
+  display: flex;
+  gap: 0.5rem;
   margin-top: 15px;
-  width: 100%;
+  align-items: center;
+}
+
+.btnVer {
+  flex: 1;
   padding: 8px;
   background: #2563eb;
   color: white;

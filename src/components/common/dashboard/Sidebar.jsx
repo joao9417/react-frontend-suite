@@ -79,7 +79,11 @@ const Sidebar = () => {
                                         📄 <span>Crear Presupuesto</span> {/* Agregamos span */}
                                     </Link>
                                 </li>
-
+                                <li className={styles.sidebar_item}> 
+                                    <Link to="/presupuestos/papelera" className={`${styles.sidebar_link} ${isActiveLink('/presupuestos/papelera')}`}>
+                                        🗑️ <span>Papelera</span>
+                                    </Link>
+                                </li>
                             </>
                         ) : (
                             // menu de modo ingenieria (dentro de un cuarto frio)
