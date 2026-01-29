@@ -39,6 +39,13 @@ export const deletePresupuesto = async (id) => {
     return response.data;
 };
 
+// Obtener presupuestos eliminados (papelera)
+export const getPresupuestosEliminados = async () => {
+    // Asumimos que el backend filtra por ?activo=False
+    const response = await api.get(`${API_ENDPOINT}?activo=False`);
+    return response.data;
+};
+
 // Empaquetamos todos los servicios en un objeto para exportarlos juntos
 const presupuestoService = {
     getPresupuestos,
@@ -46,7 +53,9 @@ const presupuestoService = {
     getEspecialidades,
     getPresupuestoById,
     updatePresupuesto,
+    updatePresupuesto,
     deletePresupuesto,
+    getPresupuestosEliminados,
 };
 
 // Exportamos el objeto con todos los servicios
