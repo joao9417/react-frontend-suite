@@ -3,14 +3,40 @@ import { useForm } from 'react-hook-form';
 import { usePresupuestos } from '../../hooks/usePresupuestos';
 import { toast } from 'react-hot-toast';
 
-const PresupuestoForm = ({ onSuccess, ingenieros = [] }) => {
+const PresupuestoForm = ({ onSuccess, ingenieros = [], initialData = null, onSubmitMode = null }) => {
     const { 
         register, 
         handleSubmit, 
         formState: { errors, isSubmitting },
         reset 
-    } = useForm();
+    } = useForm({
+        defaultValues: initialData ? {
+            nombre: initialData.nombre_proyecto,
+            cliente: initialData.cliente,
+            ubicacion_geografica: initialData.ubicacion_geografica,
+            // Use _id for edit mode if available, fallback to direct value
+            ingeniero_responsable: String(initialData.ingeniero_responsable_id || initialData.ingeniero_responsable || ''),
+            especialidades: initialData.especialidades_detalle 
+                ? initialData.especialidades_detalle.map(e => String(e.id))
+                : (initialData.especialidades ? initialData.especialidades.map(id => String(id)) : [])
+        } : {}
+    });
     
+    // Reset form when initialData changes to ensure checkboxes are checked
+    useEffect(() => {
+        if (initialData) {
+            reset({
+                nombre: initialData.nombre_proyecto,
+                cliente: initialData.cliente,
+                ubicacion_geografica: initialData.ubicacion_geografica,
+                ingeniero_responsable: String(initialData.ingeniero_responsable_id || initialData.ingeniero_responsable || ''),
+                especialidades: initialData.especialidades_detalle 
+                    ? initialData.especialidades_detalle.map(e => String(e.id))
+                    : (initialData.especialidades ? initialData.especialidades.map(id => String(id)) : [])
+            });
+        }
+    }, [initialData, reset]);
+
     const { handleCrear, cargarEspecialidades, especialidades } = usePresupuestos();
     const [loadingEspecialidades, setLoadingEspecialidades] = useState(false);
 
@@ -19,7 +45,9 @@ const PresupuestoForm = ({ onSuccess, ingenieros = [] }) => {
         const fetchEspecialidades = async () => {
             setLoadingEspecialidades(true);
             try {
-                await cargarEspecialidades();
+                if (especialidades.length === 0) {
+                    await cargarEspecialidades();
+                }
             } catch (error) {
                 toast.error('Error al cargar especialidades');
             } finally {
@@ -43,7 +71,12 @@ const PresupuestoForm = ({ onSuccess, ingenieros = [] }) => {
             version_presupuesto: "1.0",
         };
 
-        const result = await handleCrear(formattedData);
+        let result;
+        if (onSubmitMode) {
+            result = await onSubmitMode(formattedData);
+        } else {
+            result = await handleCrear(formattedData);
+        }
         
         if (result.success) {
             reset();
@@ -75,18 +108,6 @@ const PresupuestoForm = ({ onSuccess, ingenieros = [] }) => {
                 {errors.nombre && (
                     <p className="text-red-500 text-sm mt-1">{errors.nombre.message}</p>
                 )}
-            </div>
-
-            <div>
-                <label className="block text-sm font-medium mb-1">
-                    Descripción
-                </label>
-                <textarea
-                    {...register('descripcion')}
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
-                    rows="3"
-                    placeholder="Describe el proyecto..."
-                />
             </div>
 
             <div>
@@ -165,7 +186,7 @@ const PresupuestoForm = ({ onSuccess, ingenieros = [] }) => {
                                 >
                                     <input
                                         type="checkbox"
-                                        value={especialidad.id}
+                                        value={String(especialidad.id)}
                                         {...register('especialidades', { 
                                             required: 'Selecciona al menos una especialidad' 
                                         })}
@@ -200,11 +221,12 @@ const PresupuestoForm = ({ onSuccess, ingenieros = [] }) => {
                             <span className="animate-spin border-2 border-white border-t-transparent rounded-full h-5 w-5"></span>
                             Procesando...
                         </>
-                    ) : '🚀 Crear Presupuesto'}
+                    ) : (initialData ? '💾 Guardar Cambios' : '🚀 Crear Presupuesto')}
                 </button>
             </div>
+
+
         </form>
     );
 };
-
 export default PresupuestoForm;
