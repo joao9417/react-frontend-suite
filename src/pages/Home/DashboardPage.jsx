@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trash2, AlertTriangle } from "lucide-react";
+import { Trash2, AlertTriangle, Settings, X } from "lucide-react";
 import { toast } from 'react-hot-toast';
 import presupuestoService from '../../services/presupuestoService';
+import PresupuestoForm from '../../components/presupuestos/PresupuestoForm'; // Reuse form
 import styles from './DashboardPage.module.css';
 
 const DashboardPage = () => {
@@ -10,6 +11,11 @@ const DashboardPage = () => {
   const [loading, setLoading] = useState(true);
   const [presupuestoAEliminar, setPresupuestoAEliminar] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  
+  // Edit State
+  const [editingPresupuesto, setEditingPresupuesto] = useState(null);
+  const [ingenieros, setIngenieros] = useState([]); // Needed for form
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,6 +30,15 @@ const DashboardPage = () => {
       }
     };
     fetchPresupuestos();
+    
+    // Fetch engineers if user is logged in (simulated based on PresupuestoPage logic)
+    const fetchIngenieros = () => {
+        try {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if(user) setIngenieros([{ id: user.id, username: user.username, email: user.email }]);
+        } catch(e) { console.error(e); }
+    };
+    fetchIngenieros();
   }, []);
 
   const handleVerDetalle = (id) => {
@@ -45,6 +60,27 @@ const DashboardPage = () => {
     } finally {
         setIsDeleting(false);
     }
+  };
+
+  const handleEditClick = (presupuesto) => {
+      setEditingPresupuesto(presupuesto);
+  };
+
+  const handleUpdate = async (data) => {
+      try {
+          // Call update service
+          const response = await presupuestoService.updatePresupuesto(editingPresupuesto.id, data);
+          toast.success(`Presupuesto ${response.consecutivo} actualizado!`);
+          
+          // Update local state
+          setPresupuestos(prev => prev.map(p => p.id === editingPresupuesto.id ? response : p));
+          setEditingPresupuesto(null);
+          return { success: true, data: response }; // Return for form to handle success
+      } catch (error) {
+          console.error(error);
+          toast.error('Error al actualizar presupuesto');
+          return { success: false, error };
+      }
   };
 
   return (
@@ -93,6 +129,19 @@ const DashboardPage = () => {
                       >
                           Ver Detalles
                       </button>
+                      
+                      {/* Botón Editar (Engranaje) */}
+                      <button
+                          className="text-gray-500 hover:text-blue-600 p-2 hover:bg-gray-100 rounded transition-colors"
+                          onClick={(e) => {
+                              e.stopPropagation();
+                              handleEditClick(p);
+                          }}
+                          title="Editar presupuesto"
+                      >
+                          <Settings size={20} />
+                      </button>
+
                       <button 
                           className="text-red-500 hover:text-red-700 p-2 hover:bg-red-50 rounded transition-colors"
                           onClick={(e) => {
@@ -115,6 +164,8 @@ const DashboardPage = () => {
           </div>
         )}
       </div>
+
+      {/* Modal De Eliminación */}
       {presupuestoAEliminar && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
               <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 animate-in fade-in zoom-in duration-200">
@@ -146,6 +197,31 @@ const DashboardPage = () => {
                   </div>
               </div>
           </div>
+      )}
+
+      {/* Modal De Edición */}
+      {editingPresupuesto && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+            <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full p-6 animate-in fade-in zoom-in duration-200 max-h-[90vh] overflow-y-auto">
+                <div className="flex justify-between items-center mb-6 border-b pb-4">
+                    <h3 className="text-xl font-bold text-gray-800">Editar Presupuesto</h3>
+                    <button 
+                        onClick={() => setEditingPresupuesto(null)}
+                        className="text-gray-500 hover:text-gray-700"
+                    >
+                        <X size={24} />
+                    </button>
+                </div>
+                
+                <PresupuestoForm 
+                    key={editingPresupuesto ? editingPresupuesto.id : 'new'}
+                    initialData={editingPresupuesto}
+                    ingenieros={ingenieros}
+                    onSubmitMode={handleUpdate}
+                    onSuccess={() => setEditingPresupuesto(null)} // Close on success handled in handleUpdate or here
+                />
+            </div>
+        </div>
       )}
     </div>
   );
