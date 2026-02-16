@@ -48,7 +48,19 @@ export const getPresupuestosEliminados = async () => {
 
 // Restaurar presupuesto (activo=True)
 export const restorePresupuesto = async (id) => {
-    const response = await api.patch(`${API_ENDPOINT}${id}/`, { activo: true });
+    const response = await api.patch(`${API_ENDPOINT}${id}/restaurar/`, {});
+    return response.data;
+};
+
+// Compartir presupuesto (Clonar y asignar)
+export const compartirPresupuesto = async (id, userId) => {
+    const response = await api.post(`${API_ENDPOINT}${id}/transferir_copia/`, { usuario_id: userId });
+    return response.data;
+};
+
+// Devolver versión (Clonar de vuelta al dueño)
+export const devolverPresupuesto = async (id) => {
+    const response = await api.post(`${API_ENDPOINT}${id}/devolver_version/`, {});
     return response.data;
 };
 
@@ -62,6 +74,8 @@ const presupuestoService = {
     deletePresupuesto,
     getPresupuestosEliminados,
     restorePresupuesto,
+    compartirPresupuesto,
+    devolverPresupuesto,
 };
 
 // Exportamos el objeto con todos los servicios

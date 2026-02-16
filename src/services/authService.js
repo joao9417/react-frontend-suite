@@ -101,11 +101,18 @@ export const logout = async () => {
     }
 };
 
+//obtener lista de usuarios (para compartir)
+export const getUsers = async () => {
+    const response = await api.get('users/');
+    return response.data;
+};
+
 const authService = {
     api,
     register,
     login,
     logout,
+    getUsers, // Added to export
 };
 
 export default authService;
