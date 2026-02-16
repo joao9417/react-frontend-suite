@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Trash2, AlertTriangle, Settings, X } from "lucide-react";
+import { Trash2, AlertTriangle, Settings, X, Share2, CornerUpLeft } from "lucide-react";
 import { toast } from 'react-hot-toast';
 import presupuestoService from '../../services/presupuestoService';
 import PresupuestoForm from '../../components/presupuestos/PresupuestoForm'; // Reuse form
+import ShareBudgetModal from '../../components/presupuestos/ShareBudgetModal';
 import styles from './DashboardPage.module.css';
 
 const DashboardPage = () => {
@@ -12,11 +13,16 @@ const DashboardPage = () => {
   const [presupuestoAEliminar, setPresupuestoAEliminar] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
   
+  // Share/Return State
+  const [presupuestoACompartir, setPresupuestoACompartir] = useState(null);
+  const [isReturning, setIsReturning] = useState(false);
+
   // Edit State
   const [editingPresupuesto, setEditingPresupuesto] = useState(null);
   const [ingenieros, setIngenieros] = useState([]); // Needed for form
 
   const navigate = useNavigate();
+  const currentUser = JSON.parse(localStorage.getItem('user')) || {};
 
   useEffect(() => {
     const fetchPresupuestos = async () => {
@@ -62,6 +68,37 @@ const DashboardPage = () => {
     }
   };
 
+  const handleShare = async (id, userId) => {
+      try {
+          await presupuestoService.compartirPresupuesto(id, userId);
+          toast.success('Presupuesto compartido correctamente');
+          // Refresh list
+          const data = await presupuestoService.getPresupuestos();
+          setPresupuestos(data);
+      } catch (error) {
+          console.error(error);
+          toast.error('Error al compartir el presupuesto');
+      }
+  };
+
+  const handleDevolver = async (presupuesto) => {
+      if (!confirm(`¿Estás seguro de devolver la versión modificada de "${presupuesto.nombre_proyecto}" al dueño original?`)) return;
+
+      setIsReturning(true);
+      try {
+          await presupuestoService.devolverPresupuesto(presupuesto.id);
+          toast.success('Versión devuelta al dueño original');
+          // Refresh list
+          const data = await presupuestoService.getPresupuestos();
+          setPresupuestos(data);
+      } catch (error) {
+          console.error(error);
+          toast.error('Error al devolver el presupuesto');
+      } finally {
+          setIsReturning(false);
+      }
+  };
+
   const handleEditClick = (presupuesto) => {
       setEditingPresupuesto(presupuesto);
   };
@@ -96,16 +133,30 @@ const DashboardPage = () => {
         ) : (
           <div className={styles.dashboardPage__grid}>
             {presupuestos.length > 0 ? (
-              presupuestos.map((p) => (
+              presupuestos.map((p) => {
+                const isOwner = p.creado_por === currentUser.id;
+                const isLoaned = p.es_prestamo;
+                const canReturn = isLoaned && isOwner;
+
+                return (
                 <div 
                   key={p.id} 
-                  className={styles.presupuestoCard}
+                  className={`${styles.presupuestoCard} ${isLoaned ? 'border-2 border-blue-200 bg-blue-50' : ''}`}
                   onClick={() => handleVerDetalle(p.id)}
                   style={{ cursor: 'pointer' }}
                 >
 
                   <div className={styles.presupuestoCard__header}>
-                    <span className={styles.consecutivo}>#{p.consecutivo}</span>
+                    <div className="flex justify-between w-full items-center">
+                        <div>
+                            <span className={styles.consecutivo}>#{p.consecutivo}</span>
+                            {isLoaned && (
+                                <span className="ml-2 text-xs font-bold bg-blue-200 text-blue-800 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                                    <Share2 size={10} /> Prestado
+                                </span>
+                            )}
+                        </div>
+                    </div>
                     <h3>{p.nombre_proyecto}</h3>
                   </div>
 
@@ -130,7 +181,36 @@ const DashboardPage = () => {
                           Ver Detalles
                       </button>
                       
-                      {/* Botón Editar (Engranaje) */}
+                       {/* Share Button */}
+                       {!isLoaned && isOwner && (
+                          <button
+                              className="text-blue-500 hover:text-blue-700 p-2 hover:bg-blue-50 rounded transition-colors"
+                              onClick={(e) => {
+                                  e.stopPropagation();
+                                  setPresupuestoACompartir(p);
+                              }}
+                              title="Compartir presupuesto"
+                          >
+                              <Share2 size={20} />
+                          </button>
+                       )}
+
+                       {/* Return Button */}
+                       {canReturn && (
+                          <button
+                              className="text-green-600 hover:text-green-800 p-2 hover:bg-green-50 rounded transition-colors"
+                              onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDevolver(p);
+                              }}
+                              disabled={isReturning}
+                              title="Devolver versión al dueño"
+                          >
+                              <CornerUpLeft size={20} />
+                          </button>
+                       )}
+
+                      {/* Edit Button */}
                       <button
                           className="text-gray-500 hover:text-blue-600 p-2 hover:bg-gray-100 rounded transition-colors"
                           onClick={(e) => {
@@ -153,17 +233,21 @@ const DashboardPage = () => {
                           <Trash2 size={20} />
                       </button>
                   </div>
-
-
                 </div>
-                
-              ))
+            )})
             ) : (
               <p>No tienes presupuestos creados aún.</p>
             )}
           </div>
         )}
       </div>
+
+       <ShareBudgetModal 
+            isOpen={!!presupuestoACompartir}
+            onClose={() => setPresupuestoACompartir(null)}
+            onShare={handleShare}
+            presupuesto={presupuestoACompartir}
+        />
 
       {/* Modal De Eliminación */}
       {presupuestoAEliminar && (
