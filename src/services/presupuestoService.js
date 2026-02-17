@@ -64,6 +64,12 @@ export const devolverPresupuesto = async (id) => {
     return response.data;
 };
 
+// Obtener versiones de un presupuesto
+export const getVersiones = async (id) => {
+    const response = await api.get(`${API_ENDPOINT}${id}/versiones/`);
+    return response.data;
+};
+
 // Empaquetamos todos los servicios en un objeto para exportarlos juntos
 const presupuestoService = {
     getPresupuestos,
@@ -76,6 +82,7 @@ const presupuestoService = {
     restorePresupuesto,
     compartirPresupuesto,
     devolverPresupuesto,
+    getVersiones,
 };
 
 // Exportamos el objeto con todos los servicios
