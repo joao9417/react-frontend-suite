@@ -8,7 +8,7 @@
   padding: 1rem;
   position: relative;
   top: 0;
-  transition: width 0.3s ease; 
+  transition: width 0.3s ease;
 }
 
 .sidebar__header {
@@ -170,7 +170,7 @@
 
 @media (max-width: 768px) {
   .hamburger {
-    display: block; 
+    display: block;
   }
 
   .sidebar {
@@ -178,11 +178,11 @@
     left: 0;
     top: 0;
     z-index: 1500;
-    transform: translateX(-100%); 
+    transform: translateX(-100%);
   }
 
   .sidebar_open {
-    transform: translateX(0); 
+    transform: translateX(0);
   }
 
   .sidebar_header {
@@ -190,7 +190,7 @@
     margin-bottom: 1.5rem;
     padding-left: 0.5rem;
   }
-  
+
   .sidebar_nav {
     margin-top: 1rem; /* También bajamos un poco la lista de links */
   }
@@ -203,7 +203,9 @@
   margin-top: 0.5rem;
   border-radius: 0.5rem;
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
 }
 
 .item.active {
@@ -218,4 +220,41 @@
 .item:not(.active):hover {
   background-color: #1f2937;
   color: #ffffff;
+}
+
+.sidebar_section_title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #9ca3af;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  padding-left: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.sidebar_sublist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar_sublist .sidebar_link {
+  padding-left: 2rem;
+  font-size: 0.9rem;
+  border-left: 2px solid transparent;
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.sidebar_sublist .sidebar_link:hover {
+  background-color: rgba(55, 65, 81, 0.5);
+  border-left-color: #60a5fa;
+  transform: translateX(3px);
+}
+
+.sidebar_sublist .sidebar_link_active {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+  border-left-color: #3b82f6;
+  font-weight: 600;
 }
