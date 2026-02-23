@@ -1,0 +1,46 @@
+.dashboardLayout {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+.dashboardLayout__content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0; /* Previene problemas de overflow */
+}
+
+/* Variantes */
+.dashboardLayout--collapsed .dashboardLayout__content {
+    margin-left: 0;
+    transition: margin-left 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dashboardLayout {
+        flex-direction: column;
+    }
+    
+    .dashboardLayout__content {
+        min-height: calc(100vh - 4rem); /* Altura menos el navbar */
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboardLayout {
+        height: 100%;
+        min-height: 100vh;
+    }
+}
+
+/* Modo oscuro */
+.dashboardLayout--dark {
+    background-color: #111827;
+    color: #f9fafb;
+}
+
+.dashboardLayout--dark .dashboardLayout__content {
+    background-color: #1f2937;
+}

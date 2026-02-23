@@ -1,17 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from './theme/muithTheme';
-import { AuthProvider } from './context/AuthContext.jsx'; 
-import './index.css'; 
+import "./index.css";
+import { Toaster } from 'react-hot-toast';
+import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <AuthProvider> {/* Envolvemos con el proveedor de autenticación */}
+    <BrowserRouter>
+      <AuthProvider>
         <App />
+        <Toaster />
       </AuthProvider>
-    </ThemeProvider>
+    </BrowserRouter>
   </React.StrictMode>,
 );

@@ -1,0 +1,260 @@
+.sidebar {
+  width: 16rem;
+  background-color: #1f2937;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 1rem;
+  position: relative;
+  top: 0;
+  transition: width 0.3s ease;
+}
+
+.sidebar__header {
+  margin-bottom: 2rem;
+}
+
+.sidebar__title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.sidebar__nav {
+  flex-grow: 1;
+}
+
+.sidebar__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar__item {
+  margin-bottom: 0.5rem;
+}
+
+.sidebar__link {
+  display: block;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease-in-out;
+  color: white;
+  text-decoration: none;
+}
+
+.sidebar__link:hover {
+  background-color: #374151;
+}
+
+.sidebar_link_active {
+  background-color: #3b82f6;
+}
+
+.sidebar__footer {
+  margin-top: auto;
+}
+
+.sidebar__logout {
+  width: 100%;
+  background-color: #dc2626;
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.sidebar__logout:hover {
+  background-color: #b91c1c;
+}
+
+.sidebar_link {
+  display: block;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease-in-out;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.sidebar_link:hover {
+  background-color: #374151;
+  transform: translateX(5px);
+  color: #60a5fa;
+}
+
+.sidebar_link_active {
+  background-color: #3b82f6;
+  font-weight: bold;
+}
+
+.sidebar_logout {
+  width: 100%;
+  background-color: #dc2626;
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.sidebar_footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #374151;
+}
+
+.sidebar_collapse {
+  width: 5.5rem;
+}
+
+.sidebar_collapse .sidebar_title,
+.sidebar_collapse .sidebar_link span {
+  display: none;
+}
+
+.collapse_btn {
+  display: flex;
+  position: absolute;
+  right: -12px;
+  top: 60px;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .collapse_btn {
+    display: none;
+  }
+}
+
+.hamburger {
+  display: none;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 2000;
+  background: #1f2937;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1500;
+    transform: translateX(-100%);
+  }
+
+  .sidebar_open {
+    transform: translateX(0);
+  }
+
+  .sidebar_header {
+    margin-top: 3rem; /* Esto baja el título "Suite Presupuestos" para que la X no lo tape */
+    margin-bottom: 1.5rem;
+    padding-left: 0.5rem;
+  }
+
+  .sidebar_nav {
+    margin-top: 1rem; /* También bajamos un poco la lista de links */
+  }
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.item.active {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+.item:not(.active) {
+  color: #9ca39c;
+}
+
+.item:not(.active):hover {
+  background-color: #1f2937;
+  color: #ffffff;
+}
+
+.sidebar_section_title {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #9ca3af;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  padding-left: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.sidebar_sublist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar_sublist .sidebar_link {
+  padding-left: 2rem;
+  font-size: 0.9rem;
+  border-left: 2px solid transparent;
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.sidebar_sublist .sidebar_link:hover {
+  background-color: rgba(55, 65, 81, 0.5);
+  border-left-color: #60a5fa;
+  transform: translateX(3px);
+}
+
+.sidebar_sublist .sidebar_link_active {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+  border-left-color: #3b82f6;
+  font-weight: 600;
+}
